@@ -1,7 +1,6 @@
-import * as React from 'react'
-import styled from 'styled-components'
-import { ReactComponent as TrelloIcon } from '../icons/trello_icon.svg'
-import { TIcon } from '../icons/TIcon'
+import * as React from "react";
+import styled from "styled-components";
+import { TIcon } from "../icons/TIcon";
 
 interface IHeaderProps {}
 
@@ -11,8 +10,7 @@ const Nav = styled.div`
 `
 
 const NavHeader = styled.div`
-    max-width: 1010px;
-    height: 48px;
+    height: 40px;
     width: 100%;
     display: flex;
     align-items: center;

@@ -15,17 +15,10 @@ import { IActivity, SideBar } from './SideBar'
 
 // Create styles board element properties
 const BoardEl = styled.div`
-    //display: flex;
-    //align-items: flex-start;
-    //flex-wrap: wrap;
-    //padding: 0 8px;
-    
     display: grid;
-   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-   grid-gap: .5rem;
-   align-items: flex-start;
-
-    // justify-content: space-between;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 0.5rem;
+    align-items: flex-start;
 `
 
 const BoardHeader = styled.div`
@@ -42,10 +35,17 @@ const H1 = styled.h3`
     margin: 4px;
 `
 
+const BWrap = styled.div`
+    padding: 0px 8px;
+`
+
 const initAct = [
     {
         text1: 'Dobrodošli! Aktivnosti rada sa itemima se bilježe...',
-        text2:  new Date().toLocaleDateString()+ " " + new Date().toLocaleTimeString(),
+        text2:
+            new Date().toLocaleDateString() +
+            ' ' +
+            new Date().toLocaleTimeString(),
     },
 ] as IActivity[]
 
@@ -56,13 +56,18 @@ export const Board: React.FC = () => {
     const [newBoardTitle, setNewBoardTitle] = useState('')
     const [activites, setActivities] = useState(initAct)
 
-    const datetimeStr = () => new Date().toLocaleDateString()+ " " + new Date().toLocaleTimeString();
+    const [showRSB, setShowRSB] = useState(true)
+
+    const hClickRSB = () => {
+        setShowRSB(!showRSB)
+    }
+
+    const datetimeStr = () =>
+        new Date().toLocaleDateString() + ' ' + new Date().toLocaleTimeString()
 
     // Handle drag & drop
     const onDragEnd = (result: any) => {
         const { source, destination, draggableId } = result
-
-
 
         // Do nothing if item is dropped outside the list
         if (!destination) {
@@ -85,13 +90,19 @@ export const Board: React.FC = () => {
             destination.droppableId
         ]
 
-        console.log(result, "<<---" )
+        console.log(result, '<<---')
 
         const activity = {
-            text1: "MOVED:" + ' from "' + columnStart.title + '" to "' + columnFinish.title + '".',
-            text2: datetimeStr()
-        } as IActivity;
-        setActivities([...activites, activity ])
+            text1:
+                'MOVED:' +
+                ' from "' +
+                columnStart.title +
+                '" to "' +
+                columnFinish.title +
+                '".',
+            text2: datetimeStr(),
+        } as IActivity
+        setActivities([...activites, activity])
 
         // Moving items in the same list
         if (columnStart === columnFinish) {
@@ -211,11 +222,14 @@ export const Board: React.FC = () => {
         })
 
         const activity = {
-            text1: "NEW:" + ' item in "' + boardState.columns[columnId].title  + '".',
-            text2: datetimeStr()
-        } as IActivity;
-        setActivities([...activites, activity ])
-
+            text1:
+                'NEW:' +
+                ' item in "' +
+                boardState.columns[columnId].title +
+                '".',
+            text2: datetimeStr(),
+        } as IActivity
+        setActivities([...activites, activity])
     }
 
     const hItemChange = (
@@ -247,56 +261,63 @@ export const Board: React.FC = () => {
         setBoardState({ ...boardState, items, columns })
 
         const activity = {
-            text1: "DELETED:" + ' item in "' + boardState.columns[columnId].title  + '".',
-            text2: datetimeStr()
-        } as IActivity;
-        setActivities([...activites, activity ])
+            text1:
+                'DELETED:' +
+                ' item in "' +
+                boardState.columns[columnId].title +
+                '".',
+            text2: datetimeStr(),
+        } as IActivity
+        setActivities([...activites, activity])
     }
 
     console.log('board state:', boardState)
     return (
         <>
             <Header />
-            <BoardHeader>
-                <Welecome>
-                    <H1>Welecome board</H1>
-                </Welecome>
-            </BoardHeader>
-            <BoardEl>
-                {/* Create context for drag & drop */}
-                <DragDropContext onDragEnd={onDragEnd}>
-                    {/* Get all columns in the order specified in 'board-initial-data.ts' */}
-                    {boardState.columnsOrder.map(columnId => {
-                        // Get id of the current column
-                        const column = (boardState.columns as any)[columnId]
+            <BWrap>
+                <BoardHeader>
+                    <Welecome>
+                        <H1>Welecome board</H1>
+                    </Welecome>
+                </BoardHeader>
+                <BoardEl>
+                    {/* Create context for drag & drop */}
+                    <DragDropContext onDragEnd={onDragEnd}>
+                        {/* Get all columns in the order specified in 'board-initial-data.ts' */}
+                        {boardState.columnsOrder.map(columnId => {
+                            // Get id of the current column
+                            const column = (boardState.columns as any)[columnId]
 
-                        // Get item belonging to the current column
-                        const items = column.itemsIds.map(
-                            (itemId: string) =>
-                                (boardState.items as any)[itemId]
-                        )
+                            // Get item belonging to the current column
+                            const items = column.itemsIds.map(
+                                (itemId: string) =>
+                                    (boardState.items as any)[itemId]
+                            )
 
-                        // Render the BoardColumn component
-                        return (
-                            <BoardColumn
-                                key={column.id}
-                                column={column}
-                                items={items}
-                                onClose={hCloseColumn}
-                                onClickNewItem={hClickNewItem}
-                                onItemChange={hItemChange}
-                                onItemDelete={hItemDelete}
-                            />
-                        )
-                    })}
-                </DragDropContext>
-                <NewBoardInput
-                    onChange={handleChange}
-                    title={newBoardTitle}
-                    onEnter={hAddNewList}
-                />
-            </BoardEl>
-            <SideBar activities={activites} />
+                            // Render the BoardColumn component
+                            return (
+                                <BoardColumn
+                                    key={column.id}
+                                    column={column}
+                                    items={items}
+                                    onClose={hCloseColumn}
+                                    onClickNewItem={hClickNewItem}
+                                    onItemChange={hItemChange}
+                                    onItemDelete={hItemDelete}
+                                />
+                            )
+                        })}
+                    </DragDropContext>
+
+                    <NewBoardInput
+                        onChange={handleChange}
+                        title={newBoardTitle}
+                        onEnter={hAddNewList}
+                    />
+                </BoardEl>
+            </BWrap>
+            <SideBar activities={activites} show={showRSB} onClick={hClickRSB} />
         </>
     )
 }

@@ -13,7 +13,7 @@ interface INewBoardInputStyleProps {
 
 const Input = styled.input<INewBoardInputStyleProps>`
     padding: 4px;
-    margin: 0 0.5rem;
+    margin: 0 0.5rem 1rem;
     background: #27648b;
     border: none;
     color: white;

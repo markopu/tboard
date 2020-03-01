@@ -10,14 +10,16 @@ export interface IActivity {
 }
 interface ISideBarProps {
     activities: IActivity[]
+    onClick: () => void;
+    show: boolean;
 }
 
 const RightSideBar = styled.div`
-    position: absolute;
-    top: 48px;
-    right: 0;
-    display: flex;
-    flex-direction: column;
+    //position: absolute;
+    //top: 40px;
+    //right: 0;
+    //display: flex;
+    //flex-direction: column;
     border-radius: 4px 0 0 4px;
     justify-content: space-around;
     width: 200px;
@@ -64,24 +66,67 @@ const Hr = styled.hr`
     width: 100%;
 `
 
+type RSBWrapStyleProps = {
+  show : boolean;
+}
+const RSBWrap = styled.div<RSBWrapStyleProps>`
+    position: absolute;
+    top: 40px;
+    right: 0;
+    display: flex;
+    
+    width: ${props => props.show ? "230px" : "30px"};
+    transition: .5ms;
+`
+
+const ColumnWrap = styled.div`
+    display: flex;
+    flex-direction: column;
+    color: transparent;
+`
+const PH1 = styled.div`
+    height: 8px;
+    background-color: transparent;
+`
+
+const PH2 = styled.div`
+    height: 30px;
+    background-color: #f0f0f0;
+    width: 30px;
+    border-radius: 4px 0 0 4px;
+    color: gray;
+    display: flex;
+    justify-content: center;   
+    align-items: center;
+    font-size: 12px;
+    cursor: pointer;
+`
+
 export const SideBar: React.FunctionComponent<ISideBarProps> = props => {
     return (
-        <RightSideBar>
-            <Menu>
-                <MButton>Menu</MButton>
-                <MenuArrow>&#9662;</MenuArrow>
-            </Menu>
-            <Hr />
-            <ActivityWraper>
-                <Title>Activity</Title>
+      <RSBWrap show={props.show}>
+        <ColumnWrap>
+          <PH1>{" "}</PH1>
+          <PH2 onClick={props.onClick}>&#x25BA;</PH2>
 
-                {props.activities.map(activity => (
-                    <ActivityItem
-                        textPrimary={activity.text1}
-                        textSecondary={activity.text2}
-                    />
-                ))}
-            </ActivityWraper>
-        </RightSideBar>
+        </ColumnWrap>
+        <RightSideBar>
+        <Menu>
+          <MButton>Menu</MButton>
+          <MenuArrow>&#9662;</MenuArrow>
+        </Menu>
+        <Hr/>
+        <ActivityWraper>
+          <Title>Activity</Title>
+
+          {props.activities.map((activity,index) => (
+            <ActivityItem
+              key={index}
+              textPrimary={activity.text1}
+              textSecondary={activity.text2}
+            />
+          ))}
+        </ActivityWraper>
+      </RightSideBar></RSBWrap>
     )
 }
